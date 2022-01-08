@@ -8,6 +8,7 @@ const passport = require('passport')
 const multer = require('multer')
 const serviceAccount = require('./serviceAccountKey.json')
 const admin = require('firebase-admin')
+const expressSession = require("express-session");
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 })
@@ -17,7 +18,13 @@ const upload = multer({
 const users = require('./routes/users_routes')
 const categories = require('./routes/categories_routes')
 const products = require('./routes/products_routes')
+const address = require('./routes/address_routes')
 const port = process.env.PORT || 3000
+app.use(expressSession({
+    secret: "This is one hell of a secret",
+    resave: false,
+    saveUninitialized: false
+}));
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({
@@ -32,8 +39,9 @@ app.set('port', port)
 users(app, upload)
 categories(app, upload)
 products(app, upload)
+address(app)
 server.listen(3000, '192.168.0.13' || 'localhost', function () {
-    console.log(`Backend of the Delivery mobile application for Android ${process.pid} started...`)
+    console.log(`ACTIVE SERVER ${process.pid}...`)
 })
 app.use((err, req, res, next) => {
     console.log(err)

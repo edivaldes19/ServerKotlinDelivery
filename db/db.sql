@@ -223,3 +223,34 @@ SELECT P.id,
 FROM products AS P
     INNER JOIN categories AS C ON P.id_category = C.id
 WHERE C.id = 3;
+DROP TABLE IF EXISTS address CASCADE;
+CREATE TABLE address(
+    id BIGSERIAL PRIMARY KEY,
+    id_user BIGSERIAL NOT NULL,
+    address VARCHAR NOT NULL,
+    suburb VARCHAR NOT NULL,
+    latitude DECIMAL DEFAULT 0,
+    longitude DECIMAL DEFAULT 0,
+    created_at TIMESTAMP(0) NOT NULL,
+    updated_at TIMESTAMP(0) NOT NULL,
+    FOREIGN KEY(id_user) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+INSERT INTO address(
+        id_user,
+        address,
+        suburb,
+        latitude,
+        longitude,
+        created_at,
+        updated_at
+    )
+VALUES($1, $2, $3, $4, $5, $6, $7)
+RETURNING id;
+SELECT id,
+    id_user,
+    address,
+    suburb,
+    latitude,
+    longitude
+FROM address
+WHERE id_user = 1;

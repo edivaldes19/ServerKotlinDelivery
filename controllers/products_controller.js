@@ -37,13 +37,13 @@ module.exports = {
                             switch (index) {
                                 case 0:
                                     product.image1 = url
-                                    break;
+                                    break
                                 case 1:
                                     product.image2 = url
-                                    break;
+                                    break
                                 case 2:
                                     product.image3 = url
-                                    break;
+                                    break
                             }
                         }
                         await Product.update(product)
