@@ -19,6 +19,7 @@ const users = require('./routes/users_routes')
 const categories = require('./routes/categories_routes')
 const products = require('./routes/products_routes')
 const address = require('./routes/address_routes')
+const orders = require('./routes/orders_routes')
 const port = process.env.PORT || 3000
 app.use(expressSession({
     secret: "This is one hell of a secret",
@@ -40,6 +41,7 @@ users(app, upload)
 categories(app, upload)
 products(app, upload)
 address(app)
+orders(app)
 server.listen(3000, '192.168.0.13' || 'localhost', function () {
     console.log(`ACTIVE SERVER ${process.pid}...`)
 })

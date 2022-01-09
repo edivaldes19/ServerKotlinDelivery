@@ -23,32 +23,51 @@ WHERE id = $1`
 }
 User.findByEmail = (email) => {
     const sql = `
-    SELECT u.id,
-    u.email,
-    u.name,
-    u.lastname,
-    u.phone,
-    u.image,
-    u.password,
-    u.session_token,
+    SELECT U.id,
+    U.email,
+    U.name,
+    U.lastname,
+    U.phone,
+    U.image,
+    U.password,
+    U.session_token,
     json_agg(
         json_build_object(
             'id',
-            r.id,
+            R.id,
             'name',
-            r.name,
+            R.name,
             'image',
-            r.image,
+            R.image,
             'route',
-            r.route
+            R.route
         )
     ) AS roles
-FROM users AS u
-    INNER JOIN user_has_roles AS uhr ON uhr.id_user = u.id
-    INNER JOIN roles AS r ON r.id = uhr.id_rol
-WHERE u.email = $1
-GROUP BY u.id`
+FROM users AS U
+    INNER JOIN user_has_roles AS UHR ON UHR.id_user = U.id
+    INNER JOIN roles AS R ON R.id = UHR.id_rol
+WHERE U.email = $1
+GROUP BY U.id`
     return db.oneOrNone(sql, email)
+}
+User.findDeliveryMan = () => {
+    const sql = `
+    SELECT
+    U.id,
+    U.email,
+    U.name,
+    U.lastname,
+    U.phone,
+    U.image,
+    U.password,
+    U.session_token
+FROM
+    users AS U
+    INNER JOIN user_has_roles AS UHR ON UHR.id_user = U.id
+    INNER JOIN roles AS R ON R.id = UHR.id_rol
+WHERE
+    R.id = 3`
+    return db.manyOrNone(sql)
 }
 User.create = async (user) => {
     const hash = await bcrypt.hash(user.password, 10)
